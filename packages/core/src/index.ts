@@ -1,0 +1,5 @@
+class Core {
+  constructor() {}
+
+  send() {}
+}

@@ -1,0 +1,3 @@
+class Broswer {
+  constructor() {}
+}
