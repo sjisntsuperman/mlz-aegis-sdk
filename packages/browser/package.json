@@ -1,5 +1,5 @@
 {
-  "name": "browser",
+  "name": "@aegis-web-sdk/browser",
   "version": "0.0.1",
   "description": "browser related",
   "author": "sjisntsuperman <weishijiestein@outlook.com>",
