@@ -1,3 +1,5 @@
+import { getCurrentHub } from '../client';
+
 enum ERROR_TYPES {
   RESOURCE_ERROR,
   JS_ERROR,
@@ -7,7 +9,7 @@ enum ERROR_TYPES {
   FETCH_ERROR,
 }
 
-class GlobalHandlers {
+export class GlobalHandlers {
   private _installFunc = {
     error: _installGlobalOnErrorHandler,
     unhandledexception: _unhandlExceptionErrorHandler,
@@ -54,8 +56,11 @@ function _unhandlExceptionErrorHandler() {
   window.addEventListener('unhandledrejection', handler);
 }
 
+const hub = getCurrentHub();
 // todo
-function _sendAndCapture(exception) {}
+function _sendAndCapture(exception) {
+  hub.captureEvent();
+}
 
 function _resourceErrorCapture(event) {
   const { msg } = event;
