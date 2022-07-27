@@ -1,30 +1,44 @@
-import { createTransport } from './transport';
+import { createTransport } from '@aegis-web-sdk/core';
 import { makeFetchTransport } from './transport/fetch';
-import { getCurrentHub, BaseClient } from '@aegis-web-sdk/core';
-import { isError } from '@aegis-web-sdk/utils';
+import { getCurrentHub, BaseClient, ClientOpt } from '@aegis-web-sdk/core';
+import { logger } from '@aegis-web-sdk/utils';
 
-export class Client implements BaseClient {
+export class BrowserClient extends BaseClient {
   transport: any;
+  _options: ClientOpt;
   constructor(options) {
+    super(options);
     this.transport = createTransport(options, makeFetchTransport);
   }
 
-  sendEvent(ex, hint) {
-    const errorInfo = {};
-    // if (isError(ex)) {
-    //   errorInfo = extractErrorStack(ex, level);
-    // }
-    const error = {
-      //   type: ErrorTypes.LOG,
-      //   level,
-      //   message: unknownToString(message),
-      //   name: MitoLog,
-      //   customTag: unknownToString(tag),
-      //   time: getTimestamp(),
-      //   url: getLocationHref(),
+  sendEvent(_exception, _hint) {
+    const { _dsn } = this._options;
+
+    const errorInfo = {
+      dsn: _dsn,
+    };
+
+    const {
+      tag,
+      level = 'warn',
+      type = 'aegis',
+      message = 'error message',
+      name = 'todo',
+      url = location.search,
+    } = _exception;
+    logger.info(_hint);
+
+    const envelope = {
+      type,
+      level,
+      message,
+      name,
+      customTag: tag,
+      time: Date.now(),
+      url,
       ...errorInfo,
     };
-    return this.transport.send(error, hint);
+    return this.transport.send(envelope);
   }
 
   captureException(_exception, _hint) {

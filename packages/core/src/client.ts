@@ -1,24 +1,19 @@
-export function makeDsn(dsn: string): string {
-  return dsn;
-}
-
 export type ClientOptions = {
   dsn: string;
   transport: () => void;
 };
 
 export abstract class BaseClient {
-  _options: ClientOptions;
-  _transport: any;
-  _dsn: string;
+  public _options: ClientOptions;
+  public _transport: unknown = null;
+  public _dsn = '';
 
   constructor(options: ClientOptions) {
     this._options = options;
     if (options.dsn) {
-      this._dsn = makeDsn(options.dsn);
-      this._transport = options.transport({});
+      this._dsn = options.dsn;
     }
   }
 
-  public abstract captureException(_exception: any, _hint: number): PromiseLike<Event>;
+  public abstract captureException(): void;
 }

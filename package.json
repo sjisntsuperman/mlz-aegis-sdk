@@ -1,15 +1,18 @@
 {
-  "name": "aegis-sdk",
   "version": "1.0.0",
-  "description": "",
-  "main": "dist/index.js",
-  "module": "es/index.js",
+  "private": true,
+  "workspaces": [
+    "packages/browser",
+    "packages/core",
+    "packages/hub",
+    "packages/tracing",
+    "packages/types",
+    "packages/typescript",
+    "packages/utils"
+  ],
   "scripts": {
     "build": "rollup -c rollup.config.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.16.0",
     "@typescript-eslint/parser": "^5.16.0",
@@ -19,6 +22,8 @@
     "lerna": "^4.0.0",
     "prettier": "^2.6.1",
     "rollup": "^2.67.3",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.31.2",
     "typescript": "^4.1.2"
   }
 }

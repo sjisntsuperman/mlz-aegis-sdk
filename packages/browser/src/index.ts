@@ -1,3 +1,6 @@
-class Broswer {
-  constructor() {}
-}
+import { GlobalHandlers } from "./integration"
+
+const defaultIntegrations = [
+  new GlobalHandlers(),
+  new
+]

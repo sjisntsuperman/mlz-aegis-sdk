@@ -1,14 +1,19 @@
 import { logger } from '@aegis-web-sdk/utils/logger';
 
+export type TransportOpt = {
+  makeRequest: (envelope: unknown) => Promise<unknown>;
+  buffer: any;
+};
+
 // 限制请求的 buffer []
 export function makeRequestBuff(limits: number) {
-  const buffer = [] as any[];
+  const buffer = [] as Promise<unknown>[];
 
-  function remove(task) {
+  function remove(task: Promise<unknown>) {
     return buffer.splice(buffer.indexOf(task), 1);
   }
 
-  function add(requestTask) {
+  function add(requestTask: Promise<unknown>) {
     const task = requestTask;
     const taskIdx = buffer.indexOf(task);
     if (taskIdx == -1) {
@@ -23,11 +28,12 @@ export function makeRequestBuff(limits: number) {
 }
 
 export abstract class BaseTransport {
-  constructor(options) {
+  _options: TransportOpt;
+  constructor(options: TransportOpt) {
     this._options = options;
   }
 
-  send(envelope: any) {
+  public send(envelope: unknown) {
     const { makeRequest, buffer = makeRequestBuff(100) } = this._options;
     const requestTask = () =>
       makeRequest(envelope).then(
