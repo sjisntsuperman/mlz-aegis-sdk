@@ -1,6 +1,6 @@
 {
   "name": "@aegis-web-sdk/core",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "main": "lib/core.js",
   "publishConfig": {
     "registry": "https://r.npm.taobao.org/"
@@ -11,5 +11,16 @@
   "devDependencies": {
     "@aegis-web-sdk/utils": "^0.0.1",
     "@aegis-web-sdk/types": "^0.0.1"
-  }
+  },
+  "description": "> TODO: description",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sjisntsuperman/mlz-aegis-sdk.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sjisntsuperman/mlz-aegis-sdk/issues"
+  },
+  "homepage": "https://github.com/sjisntsuperman/mlz-aegis-sdk#readme"
 }
