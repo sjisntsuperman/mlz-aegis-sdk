@@ -1,0 +1,7 @@
+prefer-workspace-packages: true
+packages:
+  - 'packages/utils'
+  - 'packages/browser'
+  - 'packages/core'
+  - 'packages/typescript'
+  - 'packages/types'

@@ -1,75 +1,62 @@
+import deepmerge from 'deepmerge';
 import { builtinModules } from 'module';
-import * as path from 'path';
-
-import deepMerge from 'deepmerge';
-
+import path from 'path';
 import {
-  makeConstToVarPlugin,
-  makeNodeResolvePlugin,
-  makeRemoveBlankLinesPlugin,
-  makeRemoveESLintCommentsPlugin,
+  makeTsPlugin,
+  makeTerserPlugin,
+  makeCleanUpPlugin,
+  makeStripPlugin,
+  makeCommonJsPlugin,
+  makeResolvePlugin,
+  makeJsonPlugin,
 } from './plugins/index.js';
-import { mergePlugins } from './utils';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const packageDotJSON = require(path.resolve(process.cwd(), './package.json'));
 
-export function makeBaseNPMConfig(options = {}) {
+export function makeBaseNpmConfig(options = {}) {
   const {
-    entrypoints = ['src/index.ts'],
+    entries = ['src/index.ts'],
     esModuleInterop = false,
     hasBundles = false,
     packageSpecificConfig = {},
   } = options;
 
-  const nodeResolvePlugin = makeNodeResolvePlugin();
-  const constToVarPlugin = makeConstToVarPlugin();
-  const removeESLintCommentsPlugin = makeRemoveESLintCommentsPlugin();
-  const removeBlankLinesPlugin = makeRemoveBlankLinesPlugin();
-
-  const defaultBaseConfig = {
-    input: entrypoints,
-
+  const defaultConfig = {
+    input: entries,
     output: {
-      dir: hasBundles ? 'build/npm' : 'build',
-
+      dir: hasBundles ? 'build/dev' : 'build',
       sourcemap: true,
-
-      preserveModules: true,
-
-      generatedCode: 'es2015',
-
+      generateCode: 'es2015',
       strict: false,
-
-      externalLiveBindings: false,
-
       freeze: false,
-
       interop: esModuleInterop ? 'auto' : 'esModule',
     },
-
-    plugins: [nodeResolvePlugin, constToVarPlugin, removeESLintCommentsPlugin, removeBlankLinesPlugin],
-
     external: [
       ...builtinModules,
-      ...Object.keys(packageDotJSON.dependencies || {}),
       ...Object.keys(packageDotJSON.devDependencies || {}),
-      ...Object.keys(packageDotJSON.peerDependencies || {}),
+      ...Object.keys(packageDotJSON.dependencies || {}),
     ],
-
+    plugins: [
+      makeTsPlugin(),
+      makeTerserPlugin(),
+      makeCleanUpPlugin(),
+      makeStripPlugin(),
+      makeCommonJsPlugin(),
+      makeResolvePlugin(),
+      makeJsonPlugin(),
+    ],
     treeshake: false,
   };
 
-  return deepMerge(defaultBaseConfig, packageSpecificConfig, {
-    customMerge: key => (key === 'plugins' ? mergePlugins : undefined),
-  });
+  return deepmerge(defaultConfig, packageSpecificConfig);
 }
 
-export function makeNPMConfigVariants(baseConfig) {
-  const variantSpecificConfigs = [
+export function makeBaseNpmVariants(baseConfig) {
+  const variantConfigs = [
     { output: { format: 'cjs', dir: path.join(baseConfig.output.dir, 'cjs') } },
     { output: { format: 'esm', dir: path.join(baseConfig.output.dir, 'esm') } },
   ];
 
-  return variantSpecificConfigs.map(variant => deepMerge(baseConfig, variant));
+  return variantConfigs.map(variant => deepmerge(baseConfig, variant));
 }
