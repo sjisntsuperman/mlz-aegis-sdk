@@ -1,81 +1,86 @@
-import { getCurrentHub } from '../client';
+import { getLocationHref, getGlobalObject, getTimestamp } from '@aegis/utils';
 
-enum ERROR_TYPES {
-  RESOURCE_ERROR,
-  JS_ERROR,
-  UNHANDLED_ERROR,
-  CONSOLE_ERROR,
-  XHR_ERROR,
-  FETCH_ERROR,
+const global = getGlobalObject();
+
+export const enum ErrorTypes {
+  UNKNOWN = 'UNKNOWN',
+  UNKNOWN_FUNCTION = 'UNKNOWN_FUNCTION',
+  JAVASCRIPT = 'JAVASCRIPT',
+  LOG = 'LOG',
+  HTTP = 'HTTP',
+  VUE = 'VUE',
+  REACT = 'REACT',
+  RESOURCE = 'RESOURCE',
+  PROMISE = 'PROMISE',
+  ROUTE = 'ROUTE',
 }
 
-export class GlobalHandlers {
-  private _installFunc = {
-    error: _installGlobalOnErrorHandler,
-    unhandledexception: _unhandlExceptionErrorHandler,
-  };
-
-  constructor(options) {
-    this._installFunc = {
-      ...this._installFunc,
-      ...options,
+export const ErrorHandler = {
+  name: 'error',
+  monitor(notify: any) {
+    const handler = (event: ErrorEvent) => {
+      notify(event.error);
     };
-    this.init();
-  }
-
-  init() {
-    Object.keys(this._installFunc).forEach(it => {
-      this._installFunc[it]();
-      this._installFunc[it] = undefined;
-    });
-  }
-}
-
-function _installGlobalOnErrorHandler() {
-  const handler = (event: any) => {
-    const { error } = event;
-
-    let exception = null;
-    if (error.localName) {
-      exception = _resourceErrorCapture(event);
-    } else {
-      exception = _jsErrorCapture(event);
+    global.addEventListener('error', handler, true);
+  },
+  transform(target: any) {
+    if (target.localName) {
+      return _getResourceMessage(target);
     }
+    return _getCodeErrorMessage(target);
+  },
+  consumer(data: any) {
+    this.transport.send(data);
+  },
+};
 
-    _sendAndCapture(exception);
-  };
-  window.addEventListener('error', handler, true);
-}
-
-function _unhandlExceptionErrorHandler() {
-  const handler = event => {
-    const exception = null;
-    // todo
-    _sendAndCapture(exception);
-  };
-  window.addEventListener('unhandledrejection', handler);
-}
-
-const hub = getCurrentHub();
-// todo
-function _sendAndCapture(exception) {
-  hub.captureEvent();
-}
-
-function _resourceErrorCapture(event) {
-  const { msg } = event;
+function _getResourceMessage(target) {
   return {
-    tag: '',
-    type: ERROR_TYPES.RESOURCE_ERROR,
-    msg,
+    type: ErrorTypes.RESOURCE,
+    url: getLocationHref(),
+    message: target.src + target.href,
+    level: 'low',
+    time: getTimestamp(),
+    name: target.localName,
   };
 }
 
-function _jsErrorCapture(event) {
-  const { msg } = event;
+function _getCodeErrorMessage(target) {
   return {
-    tag: '',
-    type: ERROR_TYPES.JS_ERROR,
-    msg,
+    type: ErrorTypes.RESOURCE,
+    url: getLocationHref(),
+    message: target.src + target.href,
+    level: 'low',
+    time: getTimestamp(),
+    name: target.localName,
   };
 }
+
+export const UnhandledRejectionHandler = {
+  name: 'unhandlerrejection',
+  monitor(notify) {
+    const _unhandledrejectionHanlder = event => {
+      notify(event);
+    };
+    global.addEventListener('unhandledrejection', _unhandledrejectionHanlder, true);
+  },
+  transform(target: any) {
+    let error = target;
+    try {
+      error = target.reason;
+    } catch (e) {
+      // do nothing
+    }
+    return {
+      type: ErrorTypes.PROMISE,
+      message: error,
+      url: getLocationHref(),
+      name: target.type,
+      time: getTimestamp(),
+      level: 'low',
+    };
+  },
+  consumer(data) {
+    this.transport.send(data);
+  },
+};

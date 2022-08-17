@@ -1,17 +1,13 @@
 {
-  "name": "@aegis-web-sdk/utils",
+  "name": "@aegis/utils",
   "version": "0.0.1",
-  "main": "lib/utils.js",
-  "publishConfig": {
-    "registry": "https://r.npm.taobao.org/"
-  },
+  "main": "build/cjs/index.js",
+  "module": "build/esm/index.js",
+  "types": "build/types/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "build": "rollup -c rollup.npm.config.js"
   },
   "dependencies": {
     "uuid": "^8.3.2"
-  },
-  "devDependencies": {
-    "@aegis-web-sdk/types": "~0.0.1"
   }
 }

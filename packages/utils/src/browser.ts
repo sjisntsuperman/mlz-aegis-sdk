@@ -1,3 +1,5 @@
+import { getGlobalObject } from './object';
+
 enum Severity {
   JS_ERROR,
 }
@@ -106,4 +108,9 @@ export function extractErrorStack(ex: any, level: Severity) {
     ...normal,
     stack: stack,
   };
+}
+
+export function getLocationHref() {
+  const global = getGlobalObject<Window>();
+  return global.location.href;
 }

@@ -1,4 +1,4 @@
-import { logger } from '@aegis-web-sdk/utils/logger';
+import { logger } from '@aegis/utils/logger';
 
 export type TransportOpt = {
   makeRequest: (envelope: unknown) => Promise<unknown>;

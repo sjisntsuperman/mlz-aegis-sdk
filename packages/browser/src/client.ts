@@ -1,50 +1,22 @@
-import { createTransport } from '@aegis-web-sdk/core';
 import { makeFetchTransport } from './transport/fetch';
-import { getCurrentHub, BaseClient, ClientOpt } from '@aegis-web-sdk/core';
-import { logger } from '@aegis-web-sdk/utils';
+import { BaseClient, ClientOpt, createTransport } from '@aegis/core';
 
 export class BrowserClient extends BaseClient {
   transport: any;
   _options: ClientOpt;
-  constructor(options) {
+  constructor(options?: any) {
     super(options);
+    this._options = {
+      ...options,
+    };
     this.transport = createTransport(options, makeFetchTransport);
   }
 
-  sendEvent(_exception, _hint) {
-    const { _dsn } = this._options;
-
-    const errorInfo = {
-      dsn: _dsn,
+  // 手动上报
+  public log(msg) {
+    const error = {
+      ...msg,
     };
-
-    const {
-      tag,
-      level = 'warn',
-      type = 'aegis',
-      message = 'error message',
-      name = 'todo',
-      url = location.search,
-    } = _exception;
-    logger.info(_hint);
-
-    const envelope = {
-      type,
-      level,
-      message,
-      name,
-      customTag: tag,
-      time: Date.now(),
-      url,
-      ...errorInfo,
-    };
-    return this.transport.send(envelope);
-  }
-
-  captureException(_exception, _hint) {
-    // handle exceptiono
-    return this.sendEvent(_exception, _hint);
+    this.transport.send(error);
   }
 }
-
-export { getCurrentHub };

@@ -1,4 +1,4 @@
-import { createTransport } from '@aegis-web-sdk/core';
+import { createTransport } from '@aegis/core';
 
 const XHR_READYSTATE_DONE = 4;
 

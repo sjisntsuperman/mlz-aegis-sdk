@@ -1,4 +1,4 @@
-import { supportsFetch, logger, getGlobal } from '@aegis-web-sdk/utils';
+import { supportsFetch, logger, getGlobal, fill } from '@aegis/utils';
 
 const global = getGlobal();
 
@@ -21,19 +21,6 @@ export function sendReport(url: string, body: string | Uint8Array): void {
       logger.error(error);
     });
   }
-}
-
-export function fill(global, key, cb) {
-  const origin = global[key] as () => void;
-  const wrapped = cb(origin);
-  if (typeof origin == 'function') {
-    try {
-      wrapFunc(origin, wrapped);
-    } catch (error) {
-      // _sendAndCapture(error);
-    }
-  }
-  global[key] = wrapped;
 }
 
 export function wrapFunc(wrapped, original) {

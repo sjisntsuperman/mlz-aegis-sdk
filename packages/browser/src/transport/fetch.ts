@@ -1,4 +1,4 @@
-import { createTransport } from '@aegis-web-sdk/core';
+import { createTransport } from '@aegis/core';
 
 export function makeFetchTransport(options, nativeFetch) {
   function makeRequest(request) {

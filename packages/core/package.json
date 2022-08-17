@@ -1,16 +1,13 @@
 {
-  "name": "@aegis-web-sdk/core",
+  "name": "@aegis/core",
   "version": "1.0.0",
   "main": "lib/core.js",
-  "publishConfig": {
-    "registry": "https://r.npm.taobao.org/"
-  },
   "scripts": {
     "build": "rollup -c rollup.npm.config.js"
   },
   "devDependencies": {
-    "@aegis-web-sdk/utils": "^0.0.1",
-    "@aegis-web-sdk/types": "^0.0.1"
+    "@aegis/utils": "workspace: *",
+    "@aegis/types": "workspace: *"
   },
   "description": "> TODO: description",
   "repository": {

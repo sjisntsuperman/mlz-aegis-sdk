@@ -1,7 +1,9 @@
-import { getCurrentHub } from './client';
-import { GlobalHandlers } from './integration';
-import { TryCatch } from './integration/trycatch';
+import { BrowserClient } from './client';
+import { ErrorHandler, UnhandledRejectionHandler } from './integration';
+import { DOMhandler } from './integration/dom';
 
-const defaultIntegrations = [new GlobalHandlers(), new TryCatch()];
+const browserClient = new BrowserClient();
 
-const hub = getCurrentHub();
+const plugins = [ErrorHandler, UnhandledRejectionHandler, DOMhandler];
+
+browserClient.use(plugins);
