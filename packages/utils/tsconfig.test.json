@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+
+  "include": ["test/**/*"],
+
+  "compilerOptions": {
+    "types": ["node", "jest"],
+    "allowJs": true,
+    "lib": ["dom", "es2020"],
+    "module": "commonjs",
+    "target": "es2020",
+    "esModuleInterop": true
+  }
+}
