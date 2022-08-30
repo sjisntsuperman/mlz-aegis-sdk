@@ -1,7 +1,9 @@
 {
   "name": "@aegis/core",
   "version": "1.0.0",
-  "main": "lib/core.js",
+  "main": "build/cjs/index.js",
+  "module": "build/esm/index.js",
+  "types": "build/types/index.d.ts",
   "scripts": {
     "build": "rollup -c rollup.npm.config.js"
   },

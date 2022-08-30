@@ -1,4 +1,4 @@
-import { nativeTrycatch } from '@aegis/utils/src';
+import { BrowserOptionsFieldsType } from '@aegis/types/src';
 import { Subscribe } from './subscribe';
 
 export type ClientOptions = {
@@ -7,11 +7,11 @@ export type ClientOptions = {
 };
 
 export abstract class BaseClient {
-  public _options: ClientOptions;
+  public _options: BrowserOptionsFieldsType;
   public _transport: unknown = null;
   public _dsn = '';
 
-  constructor(options: ClientOptions) {
+  constructor(options: BrowserOptionsFieldsType) {
     this._options = options;
     if (options.dsn) {
       this._dsn = options.dsn;

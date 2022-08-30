@@ -1,4 +1,4 @@
-import { nativeTrycatch, logger } from '@aegis-web-sdk/utils/src';
+import { nativeTrycatch, logger } from '@aegis/utils';
 
 type MonitorCallback = (data: any) => void;
 
@@ -9,7 +9,7 @@ export class Subscribe {
     this.dep.set(name, fns);
   }
 
-  notify<T>(name: string, data: <T>) {
+  notify(name: string, data: any) {
     const fns = this.dep.get(name);
     if (!fns) return;
     fns.forEach(fn => {

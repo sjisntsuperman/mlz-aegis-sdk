@@ -1,9 +1,10 @@
-import { createTransport } from '@aegis/core';
+import { BaseTransport } from '@aegis/core/src';
+import { TransportOptionsFieldsType } from '@aegis/types/src';
 
 const XHR_READYSTATE_DONE = 4;
 
-export function makeXHRTransport(options) {
-  function makeRequest(request): PromiseLike<any> {
+export function makeXHRTransport(options: TransportOptionsFieldsType) {
+  function makeRequest(request: unknown): PromiseLike<unknown> {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
 
@@ -33,5 +34,8 @@ export function makeXHRTransport(options) {
     });
   }
 
-  return createTransport(options, makeRequest);
+  return new BaseTransport({
+    makeRequest,
+    dsn: options.dsn,
+  });
 }

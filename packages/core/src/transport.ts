@@ -1,9 +1,5 @@
-import { logger } from '@aegis/utils/logger';
-
-export type TransportOpt = {
-  makeRequest: (envelope: unknown) => Promise<unknown>;
-  buffer: any;
-};
+import { logger } from '@aegis/utils/src';
+import { TransportOptionsFieldsType } from '@aegis/types/src';
 
 // 限制请求的 buffer []
 export function makeRequestBuff(limits: number) {
@@ -27,13 +23,13 @@ export function makeRequestBuff(limits: number) {
   };
 }
 
-export abstract class BaseTransport {
-  _options: TransportOpt;
-  constructor(options: TransportOpt) {
+export class BaseTransport {
+  _options: TransportOptionsFieldsType;
+  constructor(options: TransportOptionsFieldsType) {
     this._options = options;
   }
 
-  public send(envelope: unknown) {
+  public send<T>(envelope: T): PromiseLike<void> {
     const { makeRequest, buffer = makeRequestBuff(100) } = this._options;
     const requestTask = () =>
       makeRequest(envelope).then(
@@ -48,6 +44,4 @@ export abstract class BaseTransport {
       );
     return buffer.add(requestTask);
   }
-
-  public abstract captureException(): void;
 }

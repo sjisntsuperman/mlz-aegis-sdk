@@ -1,9 +1,12 @@
+import { BrowserOptionsFieldsType } from '@aegis/types/src';
 import { BrowserClient } from './client';
-import { ErrorHandler, UnhandledRejectionHandler } from './integration';
-import { DOMhandler } from './integration/dom';
+import { DOMhandler, ErrorHandler, UnhandledRejectionHandler } from './integration';
 
-const browserClient = new BrowserClient();
+function createInstance(options: BrowserOptionsFieldsType) {
+  const browser = new BrowserClient(options);
+  const plugins = [DOMhandler, ErrorHandler, UnhandledRejectionHandler];
+  browser.use(plugins);
+  return browser;
+}
 
-const plugins = [ErrorHandler, UnhandledRejectionHandler, DOMhandler];
-
-browserClient.use(plugins);
+export { BrowserClient, createInstance };

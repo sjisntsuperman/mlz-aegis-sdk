@@ -4,6 +4,9 @@
   "scripts": {
     "build": "rollup -c rollup.config.js"
   },
+  "volta": {
+    "node": "14.17.0"
+  },
   "devDependencies": {
     "@aegis/browser": "workspace:*",
     "@aegis/core": "workspace:*",

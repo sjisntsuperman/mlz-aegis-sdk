@@ -1,21 +1,10 @@
+import { BaseHandlerType } from '@aegis/types/src';
 import { getLocationHref, getGlobalObject, getTimestamp } from '@aegis/utils';
+import { ErrorTypes } from '@aegis/utils/src';
 
 const global = getGlobalObject();
 
-export const enum ErrorTypes {
-  UNKNOWN = 'UNKNOWN',
-  UNKNOWN_FUNCTION = 'UNKNOWN_FUNCTION',
-  JAVASCRIPT = 'JAVASCRIPT',
-  LOG = 'LOG',
-  HTTP = 'HTTP',
-  VUE = 'VUE',
-  REACT = 'REACT',
-  RESOURCE = 'RESOURCE',
-  PROMISE = 'PROMISE',
-  ROUTE = 'ROUTE',
-}
-
-export const ErrorHandler = {
+export const ErrorHandler: BaseHandlerType = {
   name: 'error',
   monitor(notify: any) {
     const handler = (event: ErrorEvent) => {

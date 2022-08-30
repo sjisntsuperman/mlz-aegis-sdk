@@ -1,5 +1,7 @@
-import { makeBundleConfigVariants } from '../../rollup';
+import { makeBaseNpmConfig, makeBaseNpmVariants } from '../../rollup';
 
-export default makeBundleConfigVariants({
-  entry: ['index.ts'],
-});
+export default makeBaseNpmVariants(
+  makeBaseNpmConfig({
+    entry: ['index.ts'],
+  }),
+);

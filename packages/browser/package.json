@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@aegis/core": "workspace: *",
-    "@aegis/utils": "workspace: *"
+    "@aegis/utils": "workspace: *",
+    "@aegis/types": "workspace: *"
   }
 }

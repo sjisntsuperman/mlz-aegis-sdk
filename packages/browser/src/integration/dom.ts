@@ -1,4 +1,4 @@
-import { getGlobalObject, getFunctionName, fill, wrap } from '@aegis/utils';
+import { getGlobalObject, getFunctionName, fill, wrap } from '@aegis/utils/src';
 
 const global = getGlobalObject();
 
