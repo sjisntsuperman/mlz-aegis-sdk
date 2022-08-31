@@ -1,4 +1,5 @@
 export * from './event';
-export * from './core';
+export * from './base';
 export * from './browser';
 export * from './handler';
+export * from './transport';

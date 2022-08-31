@@ -1,8 +1,14 @@
 {
   "name": "@aegis/types",
   "version": "1.0.0",
+  "types": "build/types/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sjisntsuperman/mlz-aegis-sdk.git"
+  },
+  "scripts": {
+    "build:dev": "ts-node ./scripts/buildRollup.ts",
+    "build:types": "tsc -p tsconfig.types.json",
+    "build:types:watch": "tsc -p tsconfig.types.json --watch"
   }
 }

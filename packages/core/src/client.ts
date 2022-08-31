@@ -1,4 +1,5 @@
-import { BrowserOptionsFieldsType } from '@aegis/types/src';
+import { BaseClientType, BaseHandlerType, BaseOptionsFieldsType, EventTypes } from '@aegis/types';
+import { Transport } from '@aegis/types/src';
 import { Subscribe } from './subscribe';
 
 export type ClientOptions = {
@@ -6,27 +7,31 @@ export type ClientOptions = {
   transport: () => void;
 };
 
-export abstract class BaseClient {
-  public _options: BrowserOptionsFieldsType;
-  public _transport: unknown = null;
-  public _dsn = '';
+export abstract class BaseClient<
+  O extends BaseOptionsFieldsType = BaseOptionsFieldsType,
+  E extends EventTypes = EventTypes,
+> implements BaseClientType
+{
+  public options: O;
+  public transport: Transport = null as any;
+  public dsn = '';
 
-  constructor(options: BrowserOptionsFieldsType) {
-    this._options = options;
+  constructor(options: O) {
+    this.options = options;
     if (options.dsn) {
-      this._dsn = options.dsn;
+      this.dsn = options.dsn;
     }
   }
 
-  public use(plugins: any[]) {
+  use(handlers: BaseHandlerType<E>[]) {
     const sub = new Subscribe();
-    plugins.forEach(plugin => {
-      plugin.monitor.call(this, sub.notify.bind(sub));
+    handlers.forEach(handler => {
+      handler.monitor.call(this, sub.notify.bind(sub));
       const wrapFn = (...args: any[]) => {
-        const result = plugin.transform.call(this, args);
-        plugin.consumer.call(this, result);
+        const result = handler.transform?.call(this, args);
+        handler.consumer?.call(this, result);
       };
-      sub.watch(plugin.name, wrapFn);
+      sub.watch(handler.name, wrapFn);
     });
   }
 }

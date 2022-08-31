@@ -6,3 +6,4 @@ export * from './trycatch';
 export * from './node';
 export * from './get';
 export * from './error';
+export * from './envelope';

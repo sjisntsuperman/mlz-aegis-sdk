@@ -1,14 +1,15 @@
+import { Transport } from './transport';
+
 export interface BaseClientType<O extends BaseOptionsFieldsType = BaseOptionsFieldsType> {
   options: O;
-  transport: any;
+  transport: Transport;
 }
 
 export interface BaseOptionsFieldsType {
   dsn?: string;
 }
 
-export interface TransportOptionsFieldsType {
-  dsn: string;
-  makeRequest: (envelope: unknown) => PromiseLike<unknown>;
-  buffer?: any;
+export interface EnvelopeItem {
+  url: string;
+  data?: any;
 }

@@ -1,4 +1,4 @@
-import { BaseClientType } from './core';
+import { BaseClientType } from './base';
 
 export type EventTypes = 'error' | string;
 
