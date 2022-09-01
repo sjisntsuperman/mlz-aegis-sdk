@@ -1,3 +1,3 @@
 # Aegies
 
-A web monotor. Only for study.
+A web monitor. Only for study.
