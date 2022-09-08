@@ -1,4 +1,4 @@
-import { getGlobalObject } from '../src/object';
+import { getGlobalObject } from '../../src/object';
 
 describe('get global', () => {
   test('should return global object', () => {

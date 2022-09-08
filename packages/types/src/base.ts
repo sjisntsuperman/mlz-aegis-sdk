@@ -8,8 +8,3 @@ export interface BaseClientType<O extends BaseOptionsFieldsType = BaseOptionsFie
 export interface BaseOptionsFieldsType {
   dsn?: string;
 }
-
-export interface EnvelopeItem {
-  url: string;
-  data?: any;
-}

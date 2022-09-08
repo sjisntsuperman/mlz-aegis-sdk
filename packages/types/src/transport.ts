@@ -3,7 +3,7 @@ import { EnvelopeItem } from './base';
 export interface TransportOptionsFieldsType {
   dsn: string;
   makeRequest: (envelope: EnvelopeItem) => PromiseLike<TransportMakeRequestResponse>;
-  buffer?: PromiseLike<unknown>[];
+  requestBuffer?: any;
 }
 
 export interface TransportRequest {

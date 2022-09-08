@@ -1,11 +1,10 @@
-import { getGlobalObject, getFunctionName, fill, wrap } from '@aegis/utils/src';
+import { BaseHandlerType } from '@aegis/types';
+import { WrappedFunction } from '@aegis/types/src';
+import { getGlobalObject, getFunctionName, fill, wrap } from '@aegis/utils';
 
-const global = getGlobalObject();
-
-export const DOMhandler = {
+export const DOMhandler: BaseHandlerType = {
   name: 'dom',
   monitor(notify) {
-    const handler = event => {};
     _wrapEventTarget('click', notify);
   },
   transform(target) {
@@ -16,7 +15,7 @@ export const DOMhandler = {
   },
 };
 
-function _wrapEventTarget(target: string, notify: (data?: any) => void): void {
+function _wrapEventTarget(target: string, notify: (eventName, data?: any) => void): void {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const global = getGlobalObject() as { [key: string]: any };
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -39,36 +38,10 @@ function _wrapEventTarget(target: string, notify: (data?: any) => void): void {
       fn: EventListenerObject,
       options?: boolean | AddEventListenerOptions,
     ): (eventName: string, fn: EventListenerObject, capture?: boolean, secure?: boolean) => void {
-      try {
-        if (typeof fn.handleEvent === 'function') {
-          fn.handleEvent = wrap(fn.handleEvent, {
-            mechanism: {
-              data: {
-                function: 'handleEvent',
-                handler: getFunctionName(fn),
-                target,
-              },
-              handled: true,
-              type: 'instrument',
-            },
-          });
-        }
-      } catch (err) {}
-
       return original.apply(this, [
         eventName,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        wrap(fn as any as WrappedFunction, {
-          mechanism: {
-            data: {
-              function: 'addEventListener',
-              handler: getFunctionName(fn),
-              target,
-            },
-            handled: true,
-            type: 'instrument',
-          },
-        }),
+        wrap(fn as any),
         options,
       ]);
     };
@@ -90,10 +63,11 @@ function _wrapEventTarget(target: string, notify: (data?: any) => void): void {
       ): () => void {
         const wrappedEventHandler = fn as unknown as WrappedFunction;
         try {
-          const originalEventHandler = wrappedEventHandler && wrappedEventHandler.__sentry_wrapped__;
+          const originalEventHandler = wrappedEventHandler;
           if (originalEventHandler) {
             originalRemoveEventListener.call(this, eventName, originalEventHandler, options);
           }
+          // eslint-disable-next-line no-empty
         } catch (e) {}
         return originalRemoveEventListener.call(this, eventName, wrappedEventHandler, options);
       };

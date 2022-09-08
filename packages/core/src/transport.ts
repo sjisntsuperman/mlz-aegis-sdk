@@ -1,4 +1,5 @@
 import { logger } from '@aegis/utils/src';
+
 import { EnvelopeItem, TransportOptionsFieldsType } from '@aegis/types/src';
 import { Transport } from '@aegis/types';
 
@@ -39,7 +40,7 @@ export class BaseTransport<O extends TransportOptionsFieldsType = TransportOptio
   }
 
   public send<T>(envelope: EnvelopeItem): PromiseLike<T> {
-    const { makeRequest, buffer = makeRequestBuff(100) } = this.options;
+    const { makeRequest, requestBuffer = makeRequestBuff(100) } = this.options;
 
     // function decodeEnvelope(envelope: EnvelopeItem): string {
     //   return envelope.url;
@@ -56,6 +57,6 @@ export class BaseTransport<O extends TransportOptionsFieldsType = TransportOptio
           logger.error('fetch failed', error);
         },
       );
-    return buffer.add(requestTask);
+    return requestBuffer.add(requestTask);
   }
 }

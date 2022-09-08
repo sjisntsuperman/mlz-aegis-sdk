@@ -2,7 +2,7 @@ import { BaseHandlerType } from '@aegis/types/src';
 import { getLocationHref, getGlobalObject, getTimestamp } from '@aegis/utils';
 import { ErrorTypes } from '@aegis/utils/src';
 
-const global = getGlobalObject();
+const global = getGlobalObject<Window>();
 
 export const ErrorHandler: BaseHandlerType = {
   name: 'error',
