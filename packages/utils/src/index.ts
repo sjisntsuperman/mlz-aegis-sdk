@@ -7,3 +7,4 @@ export * from './node';
 export * from './get';
 export * from './error';
 export * from './envelope';
+export * from './throtte';

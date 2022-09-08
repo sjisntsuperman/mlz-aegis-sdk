@@ -45,7 +45,7 @@ function _getCodeErrorMessage(target) {
   };
 }
 
-export const UnhandledRejectionHandler = {
+export const UnhandledRejectionHandler: BaseHandlerType = {
   name: 'unhandlerrejection',
   monitor(notify) {
     const _unhandledrejectionHanlder = event => {

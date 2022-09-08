@@ -1,51 +1,57 @@
+import { BaseHandlerType } from '@aegis/types';
+import { NotifyFieldsType } from '@aegis/types/src';
 import { getGlobalObject, getFunctionName } from '@aegis/utils';
 
-export const timerHandler = {
+export const timerHandler: BaseHandlerType = {
   name: 'timer',
   monitor(notify) {
-    const global = getGlobalObject();
-    _wrapTimeFunction(global[setTimeout], notify);
-    _wrapTimeFunction(global[setInterval], notify);
+    const global = getGlobalObject<Window>();
+    _wrapTimeFunction(global['setTimeout'], notify);
+    _wrapTimeFunction(global['setInterval'], notify);
   },
-  transfrom(data) {
-    return {};
+  transform(data) {
+    return data;
   },
   consumer(result) {
     this.transport.send(result);
   },
 };
 
-function _wrapTimeFunction(original: () => void, notify: (data?: any) => void): () => number {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const rafHandler: BaseHandlerType = {
+  name: 'raf',
+  monitor(notify) {
+    const global = getGlobalObject<Window>();
+    _wrapRAF(global['requestAnimationFrame'], notify);
+  },
+  transform(collectedData) {
+    return collectedData;
+  },
+  consumer(transformedData) {
+    this.transport.send(transformedData);
+  },
+};
+
+function _wrapTimeFunction(original: any, notify: NotifyFieldsType): () => number {
   return function (this: any, ...args: any[]): number {
     const originalCallback = args[0];
-    notify();
-    // args[0] = wrap(originalCallback, {
-    //   mechanism: {
-    //     data: { function: getFunctionName(original) },
-    //     handled: true,
-    //     type: 'instrument',
-    //   },
-    // });
+    notify(getFunctionName(original), {
+      handled: true,
+      type: 'instrument',
+      originalCallback,
+    });
     return original.apply(this, args);
   };
 }
 
-function _wrapRAF(original: any): (callback: () => void) => any {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+function _wrapRAF(original: any, notify: NotifyFieldsType): (callback: () => void) => any {
   return function (this: any, callback: () => void): () => void {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    return original.apply(this, [
-      // wrap(callback, {
-      //   mechanism: {
-      //     data: {
-      //       function: 'requestAnimationFrame',
-      //       handler: getFunctionName(original),
-      //     },
-      //     handled: true,
-      //     type: 'instrument',
-      //   },
-      // }),
-    ]);
+    notify(getFunctionName(original), {
+      data: {
+        function: 'requestAnimationFrame',
+      },
+      handled: true,
+      type: 'instrument',
+    });
+    return original.apply(this);
   };
 }

@@ -1,11 +1,13 @@
 import { BaseHandlerType } from '@aegis/types';
 import { WrappedFunction } from '@aegis/types/src';
 import { getGlobalObject, getFunctionName, fill, wrap } from '@aegis/utils';
+import { throttle } from '@aegis/utils/src';
 
 export const DOMhandler: BaseHandlerType = {
   name: 'dom',
   monitor(notify) {
-    _wrapEventTarget('click', notify);
+    const clickThrottle = throttle(notify, 300);
+    _wrapEventTarget('click', clickThrottle);
   },
   transform(target) {
     return target.error;
@@ -15,7 +17,7 @@ export const DOMhandler: BaseHandlerType = {
   },
 };
 
-function _wrapEventTarget(target: string, notify: (eventName, data?: any) => void): void {
+function _wrapEventTarget(target: string, notify: (event: string, data?: any) => void): void {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const global = getGlobalObject() as { [key: string]: any };
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -38,10 +40,18 @@ function _wrapEventTarget(target: string, notify: (eventName, data?: any) => voi
       fn: EventListenerObject,
       options?: boolean | AddEventListenerOptions,
     ): (eventName: string, fn: EventListenerObject, capture?: boolean, secure?: boolean) => void {
+      // report data
+      const wrapped = () => {
+        notify(eventName, {
+          category: eventName,
+          data: this,
+        });
+        wrap(fn as any);
+      };
       return original.apply(this, [
         eventName,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        wrap(fn as any),
+        wrapped,
         options,
       ]);
     };

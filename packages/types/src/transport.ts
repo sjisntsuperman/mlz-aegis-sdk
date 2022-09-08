@@ -1,8 +1,10 @@
-import { EnvelopeItem } from './base';
+import { EnvelopeItem } from './';
 
 export interface TransportOptionsFieldsType {
   dsn: string;
-  makeRequest: (envelope: EnvelopeItem) => PromiseLike<TransportMakeRequestResponse>;
+  url?: string;
+  headers?: any;
+  makeRequest?: (envelope: EnvelopeItem) => PromiseLike<TransportMakeRequestResponse>;
   requestBuffer?: any;
 }
 
@@ -13,6 +15,7 @@ export interface TransportRequest {
 
 export type TransportMakeRequestResponse = {
   statusCode?: number;
+  headers?: any;
 };
 
 export interface Transport {

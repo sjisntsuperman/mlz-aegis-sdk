@@ -1,11 +1,12 @@
 import { BaseTransport } from '@aegis/core/src';
+import { TransportMakeRequestResponse } from '@aegis/types';
 import { TransportOptionsFieldsType } from '@aegis/types/src';
 import { getGlobalObject } from '@aegis/utils/src';
 
-const global = getGlobalObject();
+const global = getGlobalObject<Window>();
 
 export function makeFetchTransport(options: TransportOptionsFieldsType, nativeFetch = global.fetch) {
-  function makeRequest(request: unknown): PromiseLike<unknown> {
+  function makeRequest(request: any): PromiseLike<TransportMakeRequestResponse> {
     return nativeFetch(request).then((response: any) => ({
       statusCode: response.status,
       headers: {

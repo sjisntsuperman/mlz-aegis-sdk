@@ -1,6 +1,9 @@
+import { TransportMakeRequestResponse } from '.';
+import { EnvelopeItem } from './envelope';
+
 export interface BrowserOptionsFieldsType {
   dsn: string;
-  makeRequest: () => PromiseLike<unknown>;
+  makeRequest?: (envelope: EnvelopeItem) => PromiseLike<TransportMakeRequestResponse>;
 }
 
 export abstract class BrowserClientType {

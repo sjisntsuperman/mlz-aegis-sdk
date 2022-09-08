@@ -1,14 +1,22 @@
-import { wrap, getFunctionName, getOriginalFunction } from '@aegis/utils';
+import { BaseHandlerType } from '@aegis/types';
+import { NotifyFieldsType, WrappedFunction, XMLHttpRequestProp } from '@aegis/types/src';
+import { wrap, getFunctionName, fill, getGlobalObject } from '@aegis/utils';
 
-export const xhrHandler = {
+export const xhrHandler: BaseHandlerType = {
   name: 'xhr',
-  monitor(notify) {},
-  transform(data) {},
-  consumer(result) {},
+  monitor(notify) {
+    const global = getGlobalObject<Window>() as any;
+    _wrapXHR(global['XMLHttpRequest']['send'], notify);
+  },
+  transform(data) {
+    return data;
+  },
+  consumer(result) {
+    this.transport.send(result);
+  },
 };
 
-function _wrapXHR(originalSend: () => void): () => void {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+function _wrapXHR(originalSend: () => void, notify: NotifyFieldsType): () => void {
   return function (this: XMLHttpRequest, ...args: any[]): void {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const xhr = this;
@@ -16,27 +24,14 @@ function _wrapXHR(originalSend: () => void): () => void {
 
     xmlHttpRequestProps.forEach(prop => {
       if (prop in xhr && typeof xhr[prop] === 'function') {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        fill(xhr, prop, function (original: WrappedFunction): () => any {
-          const wrapOptions = {
-            mechanism: {
-              data: {
-                function: prop,
-                handler: getFunctionName(original),
-              },
-              handled: true,
-              type: 'instrument',
-            },
-          };
+        fill(xhr, prop, function (original: WrappedFunction) {
+          notify(getFunctionName(original), {
+            handled: true,
+            type: 'instrument',
+            function: prop,
+          });
 
-          // If Instrument integration has been called before TryCatch, get the name of original function
-          const originalFunction = getOriginalFunction(original);
-          if (originalFunction) {
-            wrapOptions.mechanism.data.handler = getFunctionName(originalFunction);
-          }
-
-          // Otherwise wrap directly
-          return wrap(original, wrapOptions);
+          return wrap(original);
         });
       }
     });

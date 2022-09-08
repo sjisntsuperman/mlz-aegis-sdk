@@ -1,10 +1,11 @@
 import { BaseTransport } from '@aegis/core/src';
+import { EnvelopeItem, TransportMakeRequestResponse } from '@aegis/types/src';
 import { TransportOptionsFieldsType } from '@aegis/types/src';
 
 const XHR_READYSTATE_DONE = 4;
 
 export function makeXHRTransport(options: TransportOptionsFieldsType) {
-  function makeRequest(request: unknown): PromiseLike<unknown> {
+  function makeRequest(request: EnvelopeItem): PromiseLike<TransportMakeRequestResponse> {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
 
@@ -22,7 +23,7 @@ export function makeXHRTransport(options: TransportOptionsFieldsType) {
         }
       };
 
-      xhr.open('POST', options.url);
+      xhr.open('POST', options?.url || options.dsn);
 
       for (const header in options.headers) {
         if (Object.prototype.hasOwnProperty.call(options.headers, header)) {
