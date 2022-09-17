@@ -114,3 +114,8 @@ export function getLocationHref() {
   const global = getGlobalObject<Window>();
   return global.location.href;
 }
+
+export function supportsFetch(): boolean {
+  const global = getGlobalObject<Window>();
+  return typeof global.fetch != 'undefined';
+}

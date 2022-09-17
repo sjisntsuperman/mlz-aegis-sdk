@@ -1,6 +1,6 @@
-import { supportsFetch, logger, getGlobal, fill } from '@aegis/utils';
+import { logger, getGlobalObject, fill, supportsFetch } from '@aegis/utils/src';
 
-const global = getGlobal();
+const global = getGlobalObject<Window>();
 
 export function sendReport(url: string, body: string | Uint8Array): void {
   const isRealNavigator = Object.prototype.toString.call(global && global.navigator) === '[object Navigator]';
@@ -17,25 +17,25 @@ export function sendReport(url: string, body: string | Uint8Array): void {
       method: 'POST',
       credentials: 'omit',
       keepalive: true,
-    }).then(null, error => {
+    }).then(null, (error: unknown) => {
       logger.error(error);
     });
   }
 }
 
-export function wrapFunc(wrapped, original) {
+export function wrapFunc(wrapped: { prototype: any; }, original: { prototype: {}; }) {
   const proto = original.prototype || {};
   wrapped.prototype = original.prototype = proto;
 }
 
 fill(global, 'fetch', originalFetch => {
-  return function (...args) {
+  return function (...args: any) {
     return originalFetch
       .apply(global, args)
-      .then(res => {
+      .then((res: unknown) => {
         logger.info('fetch:', res);
       })
-      .catch(err => {
+      .catch((err: unknown) => {
         logger.info('fetch error:', err);
       });
   };

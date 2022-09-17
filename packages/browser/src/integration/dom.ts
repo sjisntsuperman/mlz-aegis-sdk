@@ -1,6 +1,6 @@
 import { BaseHandlerType } from '@aegis/types';
 import { WrappedFunction } from '@aegis/types/src';
-import { getGlobalObject, getFunctionName, fill, wrap } from '@aegis/utils';
+import { getGlobalObject, fill, wrap } from '@aegis/utils';
 import { throttle } from '@aegis/utils/src';
 
 export const DOMhandler: BaseHandlerType = {

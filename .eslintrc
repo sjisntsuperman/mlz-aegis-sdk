@@ -1,18 +1,52 @@
 {
   "root": true,
-  "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "prettier"],
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true
+  },
+  "parseOptions": {
+    "ecmaVersion": 2020
+  },
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier"
   ],
-  "env": {
-    "browser": true,
-    "node": true
-  },
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "prettier"],
   "rules": {
     "prettier/prettier": "error"
-  }
+  },
+  "ignorePatterns": ["build/*", "esm/*", "cjs/*", "examples/*", "types/*"],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx", "*.d.ts"],
+      "parserOptions": {
+        "project": ["tsconfig.json"]
+      }
+    },
+    {
+      "files": ["test/**/*.ts", "test/**/*.tsx"],
+      "parserOptions": {
+        "project": ["tsconfig.test.json"]
+      }
+    },
+    {
+      "files": ["jest/**/*.ts", "scripts/**/*.ts"],
+      "parserOptions": {
+        "project": ["tsconfig.dev.json"]
+      }
+    },
+    {
+      "files": ["rollup/**"],
+      "parserOptions": {
+        "sourceType": "module"
+      },
+      "rules": {
+        "no-console": "off"
+      }
+    }
+  ]
 }

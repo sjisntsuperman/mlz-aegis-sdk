@@ -4,7 +4,7 @@ export interface TransportOptionsFieldsType {
   dsn: string;
   url?: string;
   headers?: any;
-  makeRequest?: (envelope: EnvelopeItem) => PromiseLike<TransportMakeRequestResponse>;
+  makeRequest: (envelope: any) => PromiseLike<TransportMakeRequestResponse>;
   requestBuffer?: any;
 }
 

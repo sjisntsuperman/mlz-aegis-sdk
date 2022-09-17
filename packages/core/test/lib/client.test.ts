@@ -13,7 +13,14 @@ describe('Client', () => {
     const client = new TestClient({
       dsn: 'http://xxx.com',
     });
-      client.use([testHandler]);
-      expect()
+
+    client.use([testHandler]);
+
+    // todo: get mock reponse
+    const response = {
+      message: 'test message',
+    };
+
+    expect(response.message).toBe('test message');
   });
 });

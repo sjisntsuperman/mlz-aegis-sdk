@@ -1,19 +1,24 @@
 import { BaseTransport } from '@aegis/core/src';
 import { TransportMakeRequestResponse } from '@aegis/types';
-import { TransportOptionsFieldsType } from '@aegis/types/src';
-import { getGlobalObject } from '@aegis/utils/src';
 
-const global = getGlobalObject<Window>();
-
-export function makeFetchTransport(options: TransportOptionsFieldsType, nativeFetch = global.fetch) {
+export function makeFetchTransport(options: any, nativeFetch: (request: any, options: any) => PromiseLike<unknown>) {
   function makeRequest(request: any): PromiseLike<TransportMakeRequestResponse> {
-    return nativeFetch(request).then((response: any) => ({
-      statusCode: response.status,
+    const requestOptions: RequestInit = {
+      body: JSON.stringify(request.body),
+      method: 'POST',
+      referrerPolicy: 'origin',
       headers: {
-        'aegis-limits': response.header.get('aegis-limits'),
-        'retry-after': response.get('Retry-After'),
+        'accept': 'application/json',
+        'content-type': 'application/json',
+        ...options?.headers
       },
-    }));
+      keepalive: request.body.length <= 65536,
+      ...options.fetchOptions,
+    };
+    return nativeFetch(options.dsn, requestOptions).then((response: any) => ({
+          statusCode: response.status,
+        })
+    );
   }
 
   return new BaseTransport({

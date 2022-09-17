@@ -1,4 +1,4 @@
-# Aegies
+# Aegis
 
 一个简便的前端监控 SDK。仅供学习使用。
 
@@ -14,13 +14,13 @@
 
 ## Test
 
-测试目前在补。
+单元测试有时间再补。
 
 ## Skill
 
 - 监听错误并上报，目前支持`Console` `unrejectedexception` `settimeout` `setinterval` `XMLRequestHttp` `click`
   `requestAnimationFrame`
-- 请求使用限制默认 100 数量的队列，有效防止大量请求导致的阻塞，默认使用 fetch，兜底为 xhr
+- 削峰：请求使用限制默认 100 数量的队列，有效防止大量请求导致的阻塞，默认使用 fetch，兜底为 xhr
 
 ## Core
 
@@ -45,12 +45,12 @@ Subscribe 监听 notify 队列，并在捕获到错误之后遍历队列并执�
 ```js
 import { createInstance } from '@steinwei/aegies';
 
-const Aegies = createInstance({
+const Aegis = createInstance({
   dsn: 'http://xxx.com',
 });
 
 // 手动上报
-Aegies.log({
+Aegis.log({
   data: payload,
 });
 ```

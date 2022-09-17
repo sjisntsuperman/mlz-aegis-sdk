@@ -1,5 +1,5 @@
 export interface EnvelopeItem {
-  url: string;
+  url?: string;
   data?: any;
   body?: any;
 }

@@ -17,19 +17,19 @@ export const timerHandler: BaseHandlerType = {
   },
 };
 
-export const rafHandler: BaseHandlerType = {
-  name: 'raf',
-  monitor(notify) {
-    const global = getGlobalObject<Window>();
-    _wrapRAF(global['requestAnimationFrame'], notify);
-  },
-  transform(collectedData) {
-    return collectedData;
-  },
-  consumer(transformedData) {
-    this.transport.send(transformedData);
-  },
-};
+// export const rafHandler: BaseHandlerType = {
+//   name: 'raf',
+//   monitor(notify) {
+//     const global = getGlobalObject<Window>();
+//     _wrapRAF(global['requestAnimationFrame'], notify);
+//   },
+//   transform(collectedData) {
+//     return collectedData;
+//   },
+//   consumer(transformedData) {
+//     this.transport.send(transformedData);
+//   },
+// };
 
 function _wrapTimeFunction(original: any, notify: NotifyFieldsType): () => number {
   return function (this: any, ...args: any[]): number {
@@ -43,15 +43,15 @@ function _wrapTimeFunction(original: any, notify: NotifyFieldsType): () => numbe
   };
 }
 
-function _wrapRAF(original: any, notify: NotifyFieldsType): (callback: () => void) => any {
-  return function (this: any, callback: () => void): () => void {
-    notify(getFunctionName(original), {
-      data: {
-        function: 'requestAnimationFrame',
-      },
-      handled: true,
-      type: 'instrument',
-    });
-    return original.apply(this);
-  };
-}
+// function _wrapRAF(original: any, notify: NotifyFieldsType): (callback: () => void) => any {
+//   return function (this: any, callback: () => void): () => void {
+//     notify(getFunctionName(original), {
+//       data: {
+//         function: 'requestAnimationFrame',
+//       },
+//       handled: true,
+//       type: 'instrument',
+//     });
+//     return original.apply(this);
+//   };
+// }

@@ -4,8 +4,10 @@
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
   "scripts": {
-    "build": "rollup -c rollup.npm.config.js",
-    "build:dev": "ts-node ./scripts/buildRollup.ts",
+    "build": "run-p build:bundle build:types build:rollup",
+    "build:dev": "run-p build:rollup build:types",
+    "build:rollup": "rollup -c rollup.npm.config.js",
+    "build:bundle": "rollup -c rollup.bundle.config.js",
     "build:types": "tsc -p tsconfig.types.json",
     "build:watch": "run-p build:rollup:watch && build:types:watch",
     "build:rollup:watch": "rollup -c rollup.npm.config.js --watch",

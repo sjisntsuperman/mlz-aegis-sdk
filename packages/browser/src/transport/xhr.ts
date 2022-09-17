@@ -1,11 +1,10 @@
 import { BaseTransport } from '@aegis/core/src';
-import { EnvelopeItem, TransportMakeRequestResponse } from '@aegis/types/src';
-import { TransportOptionsFieldsType } from '@aegis/types/src';
+import { TransportMakeRequestResponse } from '@aegis/types/src';
 
 const XHR_READYSTATE_DONE = 4;
 
-export function makeXHRTransport(options: TransportOptionsFieldsType) {
-  function makeRequest(request: EnvelopeItem): PromiseLike<TransportMakeRequestResponse> {
+export function makeXHRTransport(options: any) {
+  function makeRequest(request: any): PromiseLike<TransportMakeRequestResponse> {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
 
@@ -14,11 +13,7 @@ export function makeXHRTransport(options: TransportOptionsFieldsType) {
       xhr.onreadystatechange = (): void => {
         if (xhr.readyState === XHR_READYSTATE_DONE) {
           resolve({
-            statusCode: xhr.status,
-            headers: {
-              'aegis-limits': xhr.getResponseHeader('aegis-limits'),
-              'retry-after': xhr.getResponseHeader('Retry-After'),
-            },
+            statusCode: xhr.status
           });
         }
       };

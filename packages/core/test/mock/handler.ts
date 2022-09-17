@@ -6,7 +6,10 @@ export const testHandler: BaseHandlerType = {
     const testData = {
       message: 'test message',
     };
-    notify('testEvent', testData);
+    // mock async task
+    setTimeout(function () {
+      notify('testEvent', testData);
+    }, 500);
   },
   transform(collectedData) {
     return collectedData;

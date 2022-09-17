@@ -1,9 +1,8 @@
-import { makeFetchTransport } from './transport/fetch';
 import { BaseClient, BaseTransport } from '@aegis/core/src';
 import { getLocationHref, getTimestamp } from '@aegis/utils/src';
 import { BrowserOptionsFieldsType, LogTypes } from '@aegis/types/src';
 import { makeDsn } from './utils';
-import { makeXHRTransport } from './transport';
+import { makeXHRTransport, makeFetchTransport } from './transport';
 import { getGlobalObject } from '@aegis/utils';
 
 export class BrowserClient extends BaseClient {
@@ -25,7 +24,7 @@ export class BrowserClient extends BaseClient {
     // 降级处理
     this.transport =
       typeof global['fetch'] == 'function'
-        ? makeFetchTransport(transportOptions, fetch)
+        ? makeFetchTransport(transportOptions, global['fetch'])
         : makeXHRTransport(transportOptions);
   }
 
@@ -43,9 +42,7 @@ export class BrowserClient extends BaseClient {
     };
 
     const requestOptions = {
-      url: this.options.dsn,
-      methods: 'POST',
-      data: error,
+      body: error
     };
 
     this.transport.send(requestOptions);

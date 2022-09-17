@@ -23,7 +23,7 @@ export const ErrorHandler: BaseHandlerType = {
   },
 };
 
-function _getResourceMessage(target) {
+function _getResourceMessage(target: any) {
   return {
     type: ErrorTypes.RESOURCE,
     url: getLocationHref(),
@@ -34,7 +34,7 @@ function _getResourceMessage(target) {
   };
 }
 
-function _getCodeErrorMessage(target) {
+function _getCodeErrorMessage(target: any) {
   return {
     type: ErrorTypes.RESOURCE,
     url: getLocationHref(),
@@ -48,7 +48,7 @@ function _getCodeErrorMessage(target) {
 export const UnhandledRejectionHandler: BaseHandlerType = {
   name: 'unhandlerrejection',
   monitor(notify) {
-    const _unhandledrejectionHanlder = event => {
+    const _unhandledrejectionHanlder = (event: any) => {
       notify(event);
     };
     global.addEventListener('unhandledrejection', _unhandledrejectionHanlder, true);
