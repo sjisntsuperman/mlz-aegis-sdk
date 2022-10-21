@@ -7,4 +7,6 @@ export interface BaseClientType<O extends BaseOptionsFieldsType = BaseOptionsFie
 
 export interface BaseOptionsFieldsType {
   dsn?: string;
+  vue?: any;
+  react?: any;
 }

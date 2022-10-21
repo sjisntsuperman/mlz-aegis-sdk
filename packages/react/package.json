@@ -1,0 +1,14 @@
+{
+  "name": "@aegis/react",
+  "private": "true",
+  "types": "build/types/index.d.ts",
+  "main": "build/index.js",
+  "dependencies": {
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.21",
+    "@aegis/types": "workspace: *",
+    "@aegis/core": "workspace: *"
+  }
+}

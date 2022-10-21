@@ -4,8 +4,8 @@ import { ErrorTypes } from '@aegis/utils/src';
 
 const global = getGlobalObject<Window>();
 
-export const ErrorHandler: BaseHandlerType = {
-  name: 'error',
+export const globalHandler: BaseHandlerType = {
+  name: 'global',
   monitor(notify: any) {
     const handler = (event: ErrorEvent) => {
       notify(event.error);

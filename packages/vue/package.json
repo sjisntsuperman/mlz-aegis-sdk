@@ -1,0 +1,16 @@
+{
+  "name": "@aegis/vue",
+  "private": true,
+  "types": "build/types/index.d.ts",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "",
+    "build:types": "tsc -p tsconfig.types.json"
+  },
+  "dependencies": {
+    "vue": "^3.2.41"
+  },
+  "devDependencies": {
+    "@aegis/types": "workspace: *"
+  }
+}

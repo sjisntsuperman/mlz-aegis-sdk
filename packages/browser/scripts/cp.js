@@ -4,33 +4,32 @@ const path = require('path');
 const pwd = process.cwd();
 
 function getBundleDirectory() {
-  let directoryPath = '';
-  fs.stat(path.join(pwd, './build'), (err, stats) => {
-    if (err) {
-      throw new Error(err);
-    }
-
-    if (stats.isDirectory()) {
-      directoryPath = path.join(pwd, './build');
-    }
-  });
-  return directoryPath;
+  const buildDirectory = path.join(pwd, './build');
+  return buildDirectory;
 }
 
-function cpBundleFile() {
+async function cpBundleFile() {
   const directoryPath = getBundleDirectory();
-  const filePath = path.join(directoryPath, './index.js');
-  const targetPath = path.join(pwd, './example');
+  const sourceFile = path.join(directoryPath, './index.js');
+  const targetDirectory = path.join(pwd, './example');
 
-  const targetFile = path.join(targetPath, 'bundle.js');
+  const targetFile = path.join(targetDirectory, 'bundle.js');
   let isExisted = fs.existsSync(targetFile);
 
   if (isExisted) {
-    fs.rmSync(targetFile);
+    await fs.rmSync(targetFile);
   }
 
-  fs.copyFile(filePath, targetPath);
-  console.log('done');
+  const targetStream = fs.createWriteStream(targetFile);
+  const sourceStream = fs.createReadStream(sourceFile);
+
+  sourceStream.on('data', data => {
+    targetStream.write(data);
+  });
+
+  sourceStream.on('end', () => {
+    targetStream.end();
+  });
 }
 
 cpBundleFile();

@@ -5,6 +5,13 @@
     "node": "14.17.0",
     "pnpm": "7.9.3"
   },
+  "keywords": [
+    "aegisjs",
+    "monitor",
+    "sdk",
+    "react",
+    "vue"
+  ],
   "devDependencies": {
     "@aegis/browser": "workspace:*",
     "@aegis/core": "workspace:*",
